@@ -332,6 +332,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * cheapest possible way to reduce systematic lossage, as well as
      * to incorporate impact of the highest bits that would otherwise
      * never be used in index calculations because of table bounds.
+     *
+     *
      */
     static final int hash(Object key) {
         int h;
@@ -402,6 +404,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * The number of key-value mappings contained in this map.
+     *
+     * 逻辑长度
      */
     transient int size;
 
@@ -411,6 +415,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * the HashMap or otherwise modify its internal structure (e.g.,
      * rehash).  This field is used to make iterators on Collection-views of
      * the HashMap fail-fast.  (See ConcurrentModificationException).
+     *
+     * 修改次数
      */
     transient int modCount;
 
@@ -428,6 +434,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * The load factor for the hash table.
      *
+     * 哈希表的加载因子
      * @serial
      */
     final float loadFactor;
@@ -470,6 +477,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * Constructs an empty <tt>HashMap</tt> with the default initial capacity
      * (16) and the default load factor (0.75).
+     *
+     * 构造一个空的默认的具有初始容量的HashMap
+     * 初始化了一个负载因子
+     *
+     * 刚new HashMap的时候，再堆内存开辟了一个空间
+     * hashMap这个对象，包含了table[]:null,size:0,loadFactor:0.75f等内容
      */
     public HashMap() {
         this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
@@ -624,6 +637,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
         Node<K,V>[] tab; Node<K,V> p; int n, i;
+        // 第一次添加元素的时候，触发resize()方法，
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
         if ((p = tab[i = (n - 1) & hash]) == null)
@@ -658,7 +672,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             }
         }
         ++modCount;
-        if (++size > threshold)
+        if (++size > threshold)//在resieze()中进行了初始化，16*0.75=12
             resize();
         afterNodeInsertion(evict);
         return null;
